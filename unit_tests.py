@@ -13,8 +13,6 @@ def testID3AndEvaluate():
     print("ID3 test failed -- no tree returned")
 
 def testPruning():
-  # data = [dict(a=1, b=1, c=1, Class=0), dict(a=1, b=0, c=0, Class=0), dict(a=0, b=1, c=0, Class=1), dict(a=0, b=0, c=0, Class=1), dict(a=0, b=0, c=1, Class=0)]
-  # validationData = [dict(a=0, b=0, c=1, Class=1)]
   data = [dict(a=0, b=1, c=1, d=0, Class=1), dict(a=0, b=0, c=1, d=0, Class=0), dict(a=0, b=1, c=0, d=0, Class=1), dict(a=1, b=0, c=1, d=0, Class=0), dict(a=1, b=1, c=0, d=0, Class=0), dict(a=1, b=1, c=0, d=1, Class=0), dict(a=1, b=1, c=1, d=0, Class=0)]
   validationData = [dict(a=0, b=0, c=1, d=0, Class=1), dict(a=1, b=1, c=1, d=1, Class = 0)]
   tree = ID3.ID3(data, 0)
@@ -91,69 +89,17 @@ def testPruningOnHouseData(inFile):
   print(withoutPruning)
   print("average with pruning",sum(withPruning)/len(withPruning)," without: ",sum(withoutPruning)/len(withoutPruning))
 
-def testParsing():
-  data = parse.parse('house_votes_84.data')
-  for row in data:
-    print(row)
-
 def print_tree(n):
-    # if n.label:
-      # print("output: " + n.label)
-    if n.name:
+    if n.label is not None:
+      print("output: " + str(n.label))
+    if n.name is not None:
       print(n.name)
       for k,v in n.children.items():
-        # print("attribute value: " + k)
+        print("attribute value: " + str(k))
         print_tree(v)
-
-def testID3():
-  trainData = [dict(a='0', b='0', Class='0'), dict(a='0', b='1', Class='1'), dict(a='1', b='0', Class='1'), 
-  dict(a='1', b='1', Class='0')]
-
-  tree = ID3.ID3(trainData, 0)
-  if tree != None:
-    print_tree(tree)
-    ans = ID3.evaluate(tree, dict(a='1', b='0'))
-    if ans is '1':
-      print("ID3 test succeeded.")
-    else:
-      print("ID3 test failed.")
-  else:
-    print("ID3 test failed -- no tree returned")
-
-def ID3testing():
-    # withoutPruning = []
-    data = parse.parse('house_votes_84.data')
-    # for i in range(100):
-    random.shuffle(data)
-    train = data[:len(data)//2]
-    valid = data[len(data)//2:3*len(data)//4]
-    test = data[3*len(data)//4:]
-    # for row in train:
-    #   print(row)
-    # test = data[300:]
-    # train = data[:len(data)//2]
-    # valid = data[len(data)//2:3*len(data)//4]
-    # test = data[3*len(data)//4:]
-  
-    tree = ID3.ID3(train, 'democrat')
-    print_tree(tree)
-
-    acc = ID3.test(tree, train)
-    print("training accuracy: ",acc)
-
-    acc = ID3.test(tree, test)
-    print("test accuracy: ",acc)
-
-    ID3.prune(tree, valid)
-
-      # print("no pruning test accuracy: ",acc)
-      # withoutPruning.append(acc)
-
-    # print(withoutPruning)
-    # print("average without pruning: ",sum(withoutPruning)/len(withoutPruning))
 
 if __name__ == "__main__":
     testID3AndEvaluate()
     testPruning()
     testID3AndTest()
-  
+    # testPruningOnHouseData('house_votes_84.data')
